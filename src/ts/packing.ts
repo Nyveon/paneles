@@ -8,6 +8,11 @@ interface Placement {
 	height: number;
 }
 
+interface AlgorithmResult {
+	count: number;
+	placements: Placement[];
+}
+
 /**
  * Calculates the ratio of covered area to maximum possible coverage
  * @param container
@@ -34,13 +39,13 @@ export function packingRatio(
  * @param container Containing Rectangle
  * @param panel Panel to tile
  * @param cursor Point to start from -> Will be mutated!
- * @returns Number of panels placed, how they were placed, and the endinng position
+ * @returns Number of panels placed, how they were placed
  */
 export function fill(
 	container: Rectangle,
 	panel: Rectangle,
 	cursor: Point
-): { count: number; placements: Placement[] } {
+): AlgorithmResult {
 	const placements: Placement[] = [];
 	let count = 0;
 
@@ -66,21 +71,18 @@ export function fill(
 export function transposeFill(
 	container: Rectangle,
 	panel: Rectangle
-): { count: number; placements: Placement[] } {
-	const placements: Placement[] = [];
+): AlgorithmResult {
 	const pos = new Point(0, 0);
-	let count = 0;
 
-	//todo: double pass
 	const panel1 = panel.clone();
 	const result1 = fill(container, panel1, pos);
-	count += result1.count;
-	placements.push(...result1.placements);
 	pos.x = 0;
 	panel1.transpose();
 	const result2 = fill(container, panel1, pos);
-	count += result2.count;
-	placements.push(...result1.placements);
+	const firstOrientation: AlgorithmResult = {
+		count: result1.count + result2.count,
+		placements: [...result1.placements, ...result2.placements],
+	};
 
-	return { count, placements };
+	return firstOrientation;
 }
