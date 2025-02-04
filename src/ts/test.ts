@@ -1,5 +1,6 @@
 import Point from "./geometry/Point";
 import Rectangle from "./geometry/Rectangle";
+import { fill } from "./packing";
 
 export function manualTest() {
 	const p = new Point(1, 2);
@@ -26,4 +27,7 @@ export function manualTest() {
 	console.log(r.contains(r2, p));
 	p.add(1, 1);
 	console.log(r.contains(r2, p));
+
+	console.log(r.area());
+	console.log(fill(r, r2, new Point(0, 0)));
 }
