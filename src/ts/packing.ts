@@ -27,6 +27,9 @@ export function packingRatio(
 ) {
 	const maximumPossible = Math.floor(container.area() / panel.area());
 
+	//todo: consider panel > container
+	//todo: consider diagonal case of previous
+
 	if (maximumPossible === 0) {
 		return 1;
 	}
@@ -74,6 +77,9 @@ export function transposeFill(
 ): AlgorithmResult {
 	const pos = new Point(0, 0);
 
+	//todo: potential optimization, transpose optimally first then only do one orientation
+	//todo: can also exit early if maximum possible count is reached
+
 	const panel1 = panel.clone();
 	const result1 = fill(container, panel1, pos);
 	pos.x = 0;
@@ -84,5 +90,17 @@ export function transposeFill(
 		placements: [...result1.placements, ...result2.placements],
 	};
 
-	return firstOrientation;
+	pos.set(0, 0);
+	const result3 = fill(container, panel1, pos);
+	pos.x = 0;
+	panel1.transpose();
+	const result4 = fill(container, panel1, pos);
+	const secondOrientation: AlgorithmResult = {
+		count: result3.count + result4.count,
+		placements: [...result3.placements, ...result4.placements],
+	};
+
+	return firstOrientation.count >= secondOrientation.count
+		? firstOrientation
+		: secondOrientation;
 }
