@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"lib": ["ESNext", "dom"],
+		"target": "ES6",
+		"module": "none",
+		"outFile": "./js/main.js",
+
+
+        // Strict/linter
+        "alwaysStrict": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+	},
+	"include": ["./**/*.ts"]
+}
