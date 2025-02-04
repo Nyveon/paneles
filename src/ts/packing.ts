@@ -9,6 +9,27 @@ interface Placement {
 }
 
 /**
+ * Calculates the ratio of covered area to maximum possible coverage
+ * @param container
+ * @param panel
+ * @param count Number of panels placed
+ * @returns ratio, 1 if 0 possible
+ */
+export function packingRatio(
+	container: Rectangle,
+	panel: Rectangle,
+	count: number
+) {
+	const maximumPossible = Math.floor(container.area() / panel.area());
+
+	if (maximumPossible === 0) {
+		return 1;
+	}
+
+	return count / maximumPossible;
+}
+
+/**
  * Fills the container Rectangle with as many panel Rectangles as possible
  * @param container Containing Rectangle
  * @param panel Panel to tile
