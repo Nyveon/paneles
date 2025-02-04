@@ -1,6 +1,6 @@
 import Point from "./geometry/Point";
 import Rectangle from "./geometry/Rectangle";
-import { fill, packingRatio } from "./packing";
+import { fill, packingRatio, transposeFill } from "./packing";
 
 function testRange() {
 	const start = new Point(0, 0);
@@ -20,7 +20,8 @@ function testRange() {
 					const panel = new Rectangle(x, y);
 
 					start.set(0, 0);
-					const { count, placements } = fill(container, panel, start);
+					//const { count, placements } = fill(container, panel, start);
+					const { count, placements } = transposeFill(container, panel);
 					const ratio = packingRatio(container, panel, count);
 					console.log(container.toString(), panel.toString(), placements);
 					console.log(ratio);

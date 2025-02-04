@@ -33,34 +33,54 @@ export function packingRatio(
  * Fills the container Rectangle with as many panel Rectangles as possible
  * @param container Containing Rectangle
  * @param panel Panel to tile
- * @param position Point to start from
+ * @param cursor Point to start from -> Will be mutated!
  * @returns Number of panels placed, how they were placed, and the endinng position
  */
 export function fill(
 	container: Rectangle,
 	panel: Rectangle,
-	position: Point
-): { count: number; placements: Placement[]; finalPosition: Point } {
+	cursor: Point
+): { count: number; placements: Placement[] } {
+	const placements: Placement[] = [];
 	let count = 0;
-	let placements: Placement[] = [];
-	let pos = position.clone();
 
-	while (container.contains(panel, pos)) {
+	while (container.contains(panel, cursor)) {
 		placements.push({
-			x: pos.x,
-			y: pos.y,
+			x: cursor.x,
+			y: cursor.y,
 			width: panel.width,
 			height: panel.height,
 		});
 		count++;
-		pos.x += panel.width;
+		cursor.x += panel.width;
 
-		if (!container.contains(panel, pos)) {
-			pos.x = 0;
-			pos.y += panel.height;
+		if (!container.contains(panel, cursor)) {
+			cursor.x = 0;
+			cursor.y += panel.height;
 		}
 	}
 
-	return { count, placements, finalPosition: pos };
+	return { count, placements };
 }
 
+export function transposeFill(
+	container: Rectangle,
+	panel: Rectangle
+): { count: number; placements: Placement[] } {
+	const placements: Placement[] = [];
+	const pos = new Point(0, 0);
+	let count = 0;
+
+	//todo: double pass
+	const panel1 = panel.clone();
+	const result1 = fill(container, panel1, pos);
+	count += result1.count;
+	placements.push(...result1.placements);
+	pos.x = 0;
+	panel1.transpose();
+	const result2 = fill(container, panel1, pos);
+	count += result2.count;
+	placements.push(...result1.placements);
+
+	return { count, placements };
+}
